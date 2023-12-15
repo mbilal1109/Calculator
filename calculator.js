@@ -1,6 +1,6 @@
 let firstNumber = 0;
 let secondNumber = 0;
-let operation = '';
+let operation = "";
 
 function add(num1, num2) {
     return num1 + num2;
