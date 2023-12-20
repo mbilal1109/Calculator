@@ -1,6 +1,10 @@
 let firstNumber = 0;
 let secondNumber = 0;
 let operation = "";
+let userInput = 0;
+
+const numbers = document.querySelectorAll(".number");
+const display = document.querySelector("#screen-number");
 
 function add(num1, num2) {
     return num1 + num2;
@@ -30,3 +34,9 @@ function operator(firstNumber, secondNumber, operation) {
             return divide(firstNumber, secondNumber);
     }
 }
+
+numbers.forEach((number) => {
+    number.addEventListener("click", function() {
+        display.textContent = number.value;
+    });
+});
