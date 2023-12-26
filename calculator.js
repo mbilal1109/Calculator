@@ -61,6 +61,12 @@ function clear() {
     window.location.reload();
 }
 
+function updateDisplay() {
+  prevOperator = operators.shift();
+  total = operate(parseInt(prevNumber), parseInt(currentNumber), prevOperator);
+  populateDisplay(total);
+}
+
 buttons.forEach((button) => {
     button.addEventListener("click", function() {
         value = button.value;
@@ -78,17 +84,13 @@ buttons.forEach((button) => {
             operators.push(operator);
             flag = false;
             if(operators.length > 1) {
-                prevOperator = operators.shift();
-                total = operate(parseInt(prevNumber), parseInt(currentNumber), prevOperator);
-                populateDisplay(total);
+                updateDisplay();
                 prevNumber = total;
             }
             userInput = "";
         }
         else if(button.classList.contains("equal")) {
-            prevOperator = operators.shift();
-            total = operate(parseInt(prevNumber), parseInt(currentNumber), prevOperator);
-            populateDisplay(total);
+            updateDisplay();
         }
         else if(button.classList.contains("clear")) {
             clear();
