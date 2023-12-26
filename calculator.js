@@ -1,16 +1,20 @@
-let firstNumber = "0";
-let secondNumber = "";
-let operation = "";
-let userInput = "";
-let inputArray = [];
+let operator = "";
+let currentNumber = "0";
+let prevNumber = "0";
 let result = 0;
 
-const calculatorButtons = document.querySelectorAll(".calculator-button");
-const numbers = document.querySelectorAll(".number");
-const display = document.querySelector("#screen-number");
-const equalButton = document.querySelector(".equal");
-const symbols  = document.querySelectorAll(".symbol");
+let value = "";
+let userInput = "";
+let prevOperator = "";
+const operators = [];
+let total = 0;
+let flag = true;
+
+const buttons = document.querySelectorAll(".calculator-button");
+const symbols = document.querySelectorAll(".symbol");
+const equal = document.querySelector(".equal");
 const clearBtn = document.querySelector(".clear");
+const display = document.querySelector("#screen-number");
 
 function add(num1, num2) {
     return num1 + num2;
@@ -25,53 +29,69 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if(num2 == 0) {
+        return "Err";
+    }
     return num1 / num2;
 }
 
-function operator(firstNumber, secondNumber, operation) {
-    switch(operation) {
+function operate(firstNumber, secondNumber, operator) {
+    switch(operator) {
         case "+":
-            return add(firstNumber, secondNumber);
+            result = add(firstNumber, secondNumber);
+            break;
         case "-":
-            return subtract(firstNumber, secondNumber);
+            result = subtract(firstNumber, secondNumber);
+            break;
         case "*":
-            return multiply(firstNumber, secondNumber);
+            result = multiply(firstNumber, secondNumber);
+            break;
         case "/":
-            return divide(firstNumber, secondNumber);
+            result = divide(firstNumber, secondNumber);
+            break;
     }
+    return result;
 }
 
-function populateDisplay(toBeDisplayed) {
-    display.textContent = toBeDisplayed;
+function populateDisplay(input) {
+    display.textContent = input;
 }
 
-function getResult() {
-  equalButton.addEventListener("click", function () {
-    result = operator(parseInt(inputArray[0]), parseInt(inputArray[2]), inputArray[1]);
-  });
+function clear() {
+    window.location.reload();
 }
 
-calculatorButtons.forEach((button) => {
+buttons.forEach((button) => {
     button.addEventListener("click", function() {
-        if (
-          button.value == "+" ||
-          button.value == "-" ||
-          button.value == "*" ||
-          button.value == "/"
-        ) {
-          inputArray.push(userInput);
-          inputArray.push(button.value);
-          userInput = "";
-        } else if (button.value == "=") {
-          inputArray.push(userInput);
-          populateDisplay(operator(parseInt(inputArray[0]), parseInt(inputArray[2]), inputArray[1]));
-        } else {
-          userInput = userInput + button.value;
-          populateDisplay(userInput);
+        value = button.value;
+        if(button.classList.contains("number")) {
+            userInput += `${value}`;
+            currentNumber = userInput;
+            populateDisplay(userInput);
+            if(flag) {
+                prevNumber = currentNumber;
+            }
+        }
+        else if(button.classList.contains("symbol")) {
+            operator = button.value;
+            populateDisplay(currentNumber);
+            operators.push(operator);
+            flag = false;
+            if(operators.length > 1) {
+                prevOperator = operators.shift();
+                total = operate(parseInt(prevNumber), parseInt(currentNumber), prevOperator);
+                populateDisplay(total);
+                prevNumber = total;
+            }
+            userInput = "";
+        }
+        else if(button.classList.contains("equal")) {
+            prevOperator = operators.shift();
+            total = operate(parseInt(prevNumber), parseInt(currentNumber), prevOperator);
+            populateDisplay(total);
+        }
+        else if(button.classList.contains("clear")) {
+            clear();
         }
     });
-});
-
-clearBtn.addEventListener("click", function() {
-    window.location.reload();
 });
